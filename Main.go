@@ -32,6 +32,18 @@ type MultipleImages struct {
 
 func main() {
 	app := fiber.New()
+	app.Get("/", func(ctx *fiber.Ctx) error {
+		return ctx.SendString("Bienvenido a la API de WebMobileProject\n" +
+			"Para subir imágenes, utiliza el siguiente endpoint: /upload\n" +
+			"Para obtener imágenes, utiliza el siguiente endpoint: /getimages\n" +
+			"Para eliminar imágenes, utiliza el siguiente endpoint: /delete\n" +
+			"El json es el siguiente: \n" +
+			"{\"username\": \"username\", \"images\": [\"image1\", \"image2\", ..., \"imageN\"]}\n" +
+			"El json de respuesta es el siguiente: \n" +
+			"{\"status\": \"ok\"}\n" +
+			"y para el Get de imagenes es el siguiente: \n" +
+			"{\"status\": \"ok\", \"images\": [\"image1\", \"image2\", ..., \"imageN\"]}\n")
+	})
 	app.Post("/upload", UploadRoutine())
 	app.Post("/delete", DeleteRoutine())
 	app.Get("/getimages", GetRoutine())
