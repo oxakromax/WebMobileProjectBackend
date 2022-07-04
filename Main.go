@@ -7,6 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
+	"os"
 	"time"
 )
 
@@ -34,7 +35,12 @@ func main() {
 	app.Post("/upload", UploadRoutine())
 	app.Post("/delete", DeleteRoutine())
 	app.Get("/getimages", GetRoutine())
-	err := app.Listen(":6000")
+
+	port, ok := os.LookupEnv("PORT")
+	if !ok {
+		port = "6000"
+	}
+	err := app.Listen(":" + port)
 	if err != nil {
 		return
 	}
