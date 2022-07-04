@@ -76,11 +76,11 @@ func GetRoutine() func(c *fiber.Ctx) error {
 		err := collection.FindOne(context.TODO(), bson.M{"username": multipleImages.UserName}).Decode(&userExists)
 		if err != nil {
 			// if the user doesn't exist, return error
-			return c.Status(404).JSON(bson.M{"status": "user not found"})
+			c.Status(404)
+			return err
 		}
 		// if the user exists, return "images": userExists.Images, and status: "ok"
 		return c.Status(200).JSON(bson.M{
-			"status": "ok",
 			"images": userExists.Images,
 		})
 	}
@@ -104,15 +104,17 @@ func DeleteRoutine() func(c *fiber.Ctx) error {
 		err := collection.FindOne(context.TODO(), bson.M{"username": multipleImages.UserName}).Decode(&userExists)
 		if err != nil {
 			// if the user doesn't exist, return error
-			return c.Status(404).JSON(bson.M{"status": "user not found"})
+			c.Status(404)
+			return err
 		}
 		// if the user exists, delete the images
 		_, err = collection.UpdateOne(context.TODO(), bson.M{"username": multipleImages.UserName}, bson.M{"$pull": bson.M{"images": bson.M{"$in": multipleImages.Images}}})
 		if err != nil {
 			return err
 		}
-		// return ok
-		return c.Status(200).JSON(bson.M{"status": "ok"})
+		// return status 200 without json
+		c.Status(200)
+		return nil
 	}
 }
 
@@ -136,16 +138,19 @@ func UploadRoutine() func(c *fiber.Ctx) error {
 			// if the user doesn't exist, create it
 			_, err := collection.InsertOne(context.TODO(), multipleImages)
 			if err != nil {
+				c.Status(404)
 				return err
 			}
 		} else {
 			// if the user exists, add the new images to the existing ones
 			_, err := collection.UpdateOne(context.TODO(), bson.M{"username": multipleImages.UserName}, bson.M{"$push": bson.M{"images": bson.M{"$each": multipleImages.Images}}})
 			if err != nil {
+				c.Status(500)
 				return err
 			}
 		}
 		// return ok
-		return c.Status(200).JSON(bson.M{"status": "ok"})
+		c.Status(200)
+		return nil
 	}
 }
