@@ -20,7 +20,7 @@ func clientMongo() *mongo.Client {
 	defer cancel()
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 	return client
 }
@@ -46,7 +46,7 @@ func main() {
 	})
 	app.Post("/upload", UploadRoutine())
 	app.Post("/delete", DeleteRoutine())
-	app.Get("/getimages", GetRoutine())
+	app.Post("/getimages", GetRoutine())
 
 	port, ok := os.LookupEnv("PORT")
 	if !ok {
@@ -77,13 +77,12 @@ func GetRoutine() func(c *fiber.Ctx) error {
 		if err != nil {
 			// if the user doesn't exist, return error
 			return c.Status(404).JSON(bson.M{"status": "user not found"})
-		} else {
-			// if the user exists, return "images": userExists.Images, and status: "ok"
-			return c.Status(200).JSON(bson.M{
-				"status": "ok",
-				"images": userExists.Images,
-			})
 		}
+		// if the user exists, return "images": userExists.Images, and status: "ok"
+		return c.Status(200).JSON(bson.M{
+			"status": "ok",
+			"images": userExists.Images,
+		})
 	}
 }
 
@@ -106,12 +105,11 @@ func DeleteRoutine() func(c *fiber.Ctx) error {
 		if err != nil {
 			// if the user doesn't exist, return error
 			return c.Status(404).JSON(bson.M{"status": "user not found"})
-		} else {
-			// if the user exists, delete the images
-			_, err := collection.UpdateOne(context.TODO(), bson.M{"username": multipleImages.UserName}, bson.M{"$pull": bson.M{"images": bson.M{"$in": multipleImages.Images}}})
-			if err != nil {
-				return err
-			}
+		}
+		// if the user exists, delete the images
+		_, err = collection.UpdateOne(context.TODO(), bson.M{"username": multipleImages.UserName}, bson.M{"$pull": bson.M{"images": bson.M{"$in": multipleImages.Images}}})
+		if err != nil {
+			return err
 		}
 		// return ok
 		return c.Status(200).JSON(bson.M{"status": "ok"})
