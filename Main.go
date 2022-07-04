@@ -34,7 +34,7 @@ func main() {
 	app.Post("/upload", UploadRoutine())
 	app.Post("/delete", DeleteRoutine())
 	app.Get("/getimages", GetRoutine())
-	err := app.Listen(":6321")
+	err := app.Listen(":80")
 	if err != nil {
 		return
 	}
