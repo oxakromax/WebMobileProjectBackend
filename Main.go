@@ -33,16 +33,19 @@ type MultipleImages struct {
 func main() {
 	app := fiber.New()
 	app.Get("/", func(ctx *fiber.Ctx) error {
-		return ctx.SendString("Bienvenido a la API de WebMobileProject\n" +
-			"Para subir imágenes, utiliza el siguiente endpoint: /upload\n" +
-			"Para obtener imágenes, utiliza el siguiente endpoint: /getimages\n" +
-			"Para eliminar imágenes, utiliza el siguiente endpoint: /delete\n" +
-			"El json es el siguiente: \n" +
-			"{\n\"username\": \"username\",\n \"images\": [\"image1\", \"image2\", ..., \"imageN\"]\n}\n" +
-			"El json de respuesta es el siguiente: \n" +
-			"{\n\"status\": \"ok\"\n}\n" +
-			"y para el Get de imagenes es el siguiente: \n" +
-			"{\n\"status\": \"ok\",\n \"images\": [\"image1\", \"image2\", ..., \"imageN\"]\n}\n")
+		// use some html code to show the instructions to the user
+		return ctx.SendString("<h1>Welcome to the WebMobileProject!</h1><p>This is a simple web application that allows you to upload images and retrieve them later.</p><p>To upload images, you need to send a POST request to /upload with a json object containing the username and the images you want to upload. The images should be in the form of a base64 string. For example:</p><p><code>{\"username\": \"username\", \"images\": [\"image1\", \"image2\"]}</code></p><p>To retrieve images, you need to send a GET request to /images with a json object containing the username. The images will be returned in a json object containing the images. For example:</p><p><code>{\"username\": \"username\", \"images\": [\"image1\", \"image2\"]}</code></p><p>To delete images, you need to send a POST request to /delete with a json object containing the username and the images you want to delete. The images should be in the form of a base64 string. For example:</p><p><code>{\"username\": \"username\", \"images\": [\"image1\", \"image2\"]}</code></p>")
+
+		//return ctx.SendString("Bienvenido a la API de WebMobileProject\n" +
+		//	"Para subir imágenes, utiliza el siguiente endpoint: /upload\n" +
+		//	"Para obtener imágenes, utiliza el siguiente endpoint: /getimages\n" +
+		//	"Para eliminar imágenes, utiliza el siguiente endpoint: /delete\n" +
+		//	"El json es el siguiente: \n" +
+		//	"{\n\"username\": \"username\",\n \"images\": [\"image1\", \"image2\", ..., \"imageN\"]\n}\n" +
+		//	"El json de respuesta es el siguiente: \n" +
+		//	"{\n\"status\": \"ok\"\n}\n" +
+		//	"y para el Get de imagenes es el siguiente: \n" +
+		//	"{\n\"status\": \"ok\",\n \"images\": [\"image1\", \"image2\", ..., \"imageN\"]\n}\n")
 	})
 	app.Post("/upload", UploadRoutine())
 	app.Post("/delete", DeleteRoutine())
