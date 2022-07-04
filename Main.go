@@ -38,11 +38,11 @@ func main() {
 			"Para obtener imágenes, utiliza el siguiente endpoint: /getimages\n" +
 			"Para eliminar imágenes, utiliza el siguiente endpoint: /delete\n" +
 			"El json es el siguiente: \n" +
-			"{\"username\": \"username\", \"images\": [\"image1\", \"image2\", ..., \"imageN\"]}\n" +
+			"{\n\"username\": \"username\",\n \"images\": [\"image1\", \"image2\", ..., \"imageN\"]\n}\n" +
 			"El json de respuesta es el siguiente: \n" +
-			"{\"status\": \"ok\"}\n" +
+			"{\n\"status\": \"ok\"\n}\n" +
 			"y para el Get de imagenes es el siguiente: \n" +
-			"{\"status\": \"ok\", \"images\": [\"image1\", \"image2\", ..., \"imageN\"]}\n")
+			"{\n\"status\": \"ok\",\n \"images\": [\"image1\", \"image2\", ..., \"imageN\"]\n}\n")
 	})
 	app.Post("/upload", UploadRoutine())
 	app.Post("/delete", DeleteRoutine())
