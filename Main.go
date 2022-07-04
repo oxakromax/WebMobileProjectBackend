@@ -75,9 +75,8 @@ func GetRoutine() func(c *fiber.Ctx) error {
 		var userExists MultipleImages
 		err := collection.FindOne(context.TODO(), bson.M{"username": multipleImages.UserName}).Decode(&userExists)
 		if err != nil {
-			// if the user doesn't exist, return error
-			c.Status(404)
-			return err
+			// if the user doesn't exist return one image list with this link https://twilight.mx/site/instrumentos/pngs/no-photo.png
+			return c.Status(200).JSON(bson.M{"images": []string{"https://twilight.mx/site/instrumentos/pngs/no-photo.png"}})
 		}
 		// if the user exists, return "images": userExists.Images, and status: "ok"
 		return c.Status(200).JSON(bson.M{
